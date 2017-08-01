@@ -56,28 +56,33 @@ DOWN = 2
 RIGHT = 3
 
 direction = UP
+UP_EDGE = 250
+DOWN_EDGE = -250
+RIGHT_EDGE = 400
+LEFT_EDGE = -400
 
 def up():
     global direction
-    move_snake() #update the snake drawing <- remember me later
+    direction = UP
+    #move_snake() #update the snake drawing <- remember me later
     print("you pressed the up key!")
 
 def down():
     global direction
     direction = DOWN
-    move_snake()
+    #move_snake()
     print("you pressed the down key!")
 
 def left():
     global direction
     direction = LEFT
-    move_snake()
+    #move_snake()
     print("you pressed the left key!")
 
 def right():
     global direction
     direction = RIGHT
-    move_snake()
+    #move_snake()
     print("you pressed the right key!")
 
 turtle.onkeypress(up, UP_ARROW)
@@ -104,16 +109,64 @@ def move_snake():
         snake.goto(x_pos, y_pos + SQUARE_SIZE)
         print("you moved up!")
 
-        my_pos = snake.pos()
-        pos_list.append(my_pos)
-        new_stamp = snake.stamp()
-        stamp_list.append(new_stamp)
-        ##### SPECIAL PLACE= remember it for part 5
-        #pop zeroth element in pos_list to get rid of last the last
-        #piece of the tail
-        old_stamp = stamp_list.pos(0)
-        snake.clearstamp(old_stamp)
-        pos_list.pop(0)
+    my_pos = snake.pos()
+    pos_list.append(my_pos)
+    new_stamp = snake.stamp()
+    stamp_list.append(new_stamp)
+    ##### SPECIAL PLACE= remember it for part 5
+    global food_stamps, food_pos
+    #if snake is on top of food item
+    if snake.pos() in food_pos:
+        food_ind = food_pos.index(snake.pos()) #what does this do?
+        food.clearstamp(food_stamps[food_ind]) #remove eaten food stamp
+        food_pos.pop(food_ind) #remove eaten food position
+        food.stamps.pop(food_ind) #remove eaten food stamp
+        print("you have eaten the food!")
+
+    #HINT: this if statement may be useful for part 8
+        
+    #pop zeroth element in pos_list to get rid of last the last
+    #piece of the tail
+    old_stamp = stamp_list.pop(0)
+    snake.clearstamp(old_stamp)
+    pos_list.pop(0)
+    #grab position of snake
+    new_pos = snake.pos()
+    new_x_pos = new_pos[0]
+    new_y_pos = new_pos[1]
+    #the next three lines check if the snake is hitting the right edge
+    if new_x_pos >= RIGHT_EDGE:
+        print("you hit the right edge! game over!")
+        quit()
+    elif new_x_pos <= LEFT_EDGE:
+        print("you hit the left edge! game over!")
+        quit()
+    elif new_y_pos >= UP_EDGE:
+        print("you hit the top edge! game over!")
+        quit()
+    elif new_y_pos <= DOWN_EDGE:
+        print("you hit the bottom edge! game over!")
+        quit()
+    turtle.ontimer(move_snake, TIME_STEP)
+move_snake()
+
+turtle.register_shape("trash.gif") #add trash picture 
+
+food = turtle.clone()
+food.shape("trash.gif")
+
+#location of food
+food_pos = [(100,100), (-100,100), (-100,-100), (100,-100)]
+food_stamps = []
+
+for this_food_pos in food_pos:
+    food.goto(this_food_pos)
+    food1 = food.stamp()
+    food_stamps.append(food1)
+    
+
+    
+        
     
     
 
