@@ -10,7 +10,7 @@ turtle.setup(SIZE_X, SIZE_Y) #it's the turtle window size
 turtle.penup()
 
 SQUARE_SIZE = 20
-START_LENGTH = 3
+START_LENGTH = 10
 
 #Initialize lists
 pos_list = []
@@ -19,7 +19,8 @@ food_pos = []
 food_stamps = []
 #Set up positions (x,y) of boxes that make up the snake
 snake = turtle.clone()
-snake.shape("square")
+snake.shape("circle")
+snake.color("purple")
 #Hide the turtle object (it's an arrow - we don't need to see it)
 turtle.hideturtle()
 
@@ -91,6 +92,28 @@ turtle.onkeypress(left, LEFT_ARROW)
 turtle.onkeypress(right, RIGHT_ARROW)
 turtle.listen()
 
+def make_food():
+    #the screen positions go from -SIZE/2 to +SIZE/2
+    #we need to make food pieces only appear on game squares
+    #so we cut up the game board into multiples of SQUARE_SIZE
+    min_x = -int(SIZE_X/2/SQUARE_SIZE) + 1
+    max_x = int(SIZE_X/2/SQUARE_SIZE) - 1
+    min_y = -int(SIZE_Y/2/SQUARE_SIZE) + 1
+    max_y = int(SIZE_Y/2/SQUARE_SIZE) - 1
+
+    #pick a position that is a random multiple of SQUARE_SIZE
+    food_x = random.randint(min_x, max_x) * SQUARE_SIZE
+    food_y = random.randint(min_y, max_y) * SQUARE_SIZE
+
+    food.goto(food_x, food_y)
+    food_pos1 = (food_x, food_y)
+    food_pos.append(food_pos1)
+    food_stamp1 = food.stamp()
+    food_stamps.append(food_stamp1)
+    
+
+    
+
 def move_snake():
     my_pos = snake.pos()
     x_pos = my_pos[0]
@@ -109,10 +132,19 @@ def move_snake():
         snake.goto(x_pos, y_pos + SQUARE_SIZE)
         print("you moved up!")
 
+    
+
     my_pos = snake.pos()
     pos_list.append(my_pos)
     new_stamp = snake.stamp()
     stamp_list.append(new_stamp)
+
+    if my_pos in pos_list[-1]:
+        print("game over! you ate yourself!")
+        quit()
+
+    
+
     ##### SPECIAL PLACE= remember it for part 5
     global food_stamps, food_pos
     #if snake is on top of food item
@@ -120,9 +152,9 @@ def move_snake():
         food_ind = food_pos.index(snake.pos()) #what does this do?
         food.clearstamp(food_stamps[food_ind]) #remove eaten food stamp
         food_pos.pop(food_ind) #remove eaten food position
-        food.stamps.pop(food_ind) #remove eaten food stamp
+        food_stamps.pop(food_ind) #remove eaten food stamp
         print("you have eaten the food!")
-
+        make_food()
     #HINT: this if statement may be useful for part 8
         
     #pop zeroth element in pos_list to get rid of last the last
@@ -156,14 +188,14 @@ food = turtle.clone()
 food.shape("trash.gif")
 
 #location of food
-food_pos = [(100,100), (-100,100), (-100,-100), (100,-100)]
+food_pos = [(100,100)]
 food_stamps = []
 
 for this_food_pos in food_pos:
     food.goto(this_food_pos)
     food1 = food.stamp()
     food_stamps.append(food1)
-    
+
 
     
         
