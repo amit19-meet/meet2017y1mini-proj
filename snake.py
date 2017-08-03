@@ -10,7 +10,7 @@ turtle.setup(SIZE_X, SIZE_Y) #it's the turtle window size
 turtle.penup()
 
 SQUARE_SIZE = 20
-START_LENGTH = 10
+START_LENGTH = 1
 
 #Initialize lists
 pos_list = []
@@ -90,7 +90,7 @@ turtle.onkeypress(up, UP_ARROW)
 turtle.onkeypress(down, DOWN_ARROW)
 turtle.onkeypress(left, LEFT_ARROW)
 turtle.onkeypress(right, RIGHT_ARROW)
-turtle.listen()
+turtle.listen() 
 
 def make_food():
     #the screen positions go from -SIZE/2 to +SIZE/2
@@ -139,7 +139,8 @@ def move_snake():
     new_stamp = snake.stamp()
     stamp_list.append(new_stamp)
 
-    if my_pos in pos_list[-1]:
+
+    if pos_list[-1] in pos_list[:-1]:
         print("game over! you ate yourself!")
         quit()
 
@@ -154,15 +155,16 @@ def move_snake():
         food_pos.pop(food_ind) #remove eaten food position
         food_stamps.pop(food_ind) #remove eaten food stamp
         print("you have eaten the food!")
+        #HINT: this if statement may be useful for part 8
         make_food()
-    #HINT: this if statement may be useful for part 8
+    else:
+        old_stamp = stamp_list.pop(0)
+        snake.clearstamp(old_stamp)
+        pos_list.pop(0)
+        #pop zeroth element in pos_list to get rid of the last
+        #piece of the tail
         
-    #pop zeroth element in pos_list to get rid of last the last
-    #piece of the tail
-    old_stamp = stamp_list.pop(0)
-    snake.clearstamp(old_stamp)
-    pos_list.pop(0)
-    #grab position of snake
+     #grab position of snake
     new_pos = snake.pos()
     new_x_pos = new_pos[0]
     new_y_pos = new_pos[1]
