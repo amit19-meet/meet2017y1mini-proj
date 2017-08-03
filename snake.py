@@ -68,11 +68,13 @@ def up():
     #move_snake() #update the snake drawing <- remember me later
     print("you pressed the up key!")
 
+
 def down():
     global direction
     direction = DOWN
     #move_snake()
     print("you pressed the down key!")
+    
 
 def left():
     global direction
@@ -111,7 +113,6 @@ def make_food():
     food_stamp1 = food.stamp()
     food_stamps.append(food_stamp1)
     
-
     
 
 def move_snake():
@@ -121,7 +122,7 @@ def move_snake():
 
     if direction==RIGHT:
         snake.goto(x_pos + SQUARE_SIZE, y_pos)
-        print("you moves right!")
+        print("you moved right!")
     elif direction==LEFT:
         snake.goto(x_pos - SQUARE_SIZE, y_pos)
         print("you moved left!")
@@ -143,6 +144,8 @@ def move_snake():
     if pos_list[-1] in pos_list[:-1]:
         print("game over! you ate yourself!")
         quit()
+
+
 
     
 
